@@ -8,6 +8,7 @@ function createCard(card, onDelete) {
   const cardTitle = clone.querySelector(".card__title");
 
   cardImg.src = card.link;
+  cardImg.alt = card.name;
   cardTitle.innerText = card.name;
   cardDeleteBtn.addEventListener("click", onDelete);
 

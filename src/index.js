@@ -8,8 +8,9 @@ const previewCaption = document.querySelector(".popup__caption");
 const placesList = document.querySelector(".places__list");
 const profileAddBtn = document.querySelector(".profile__add-button");
 const profileEditBtn = document.querySelector(".profile__edit-button");
-const popups = document.querySelectorAll(".popup");
-const [popupEdit, popupNewCard, popupImg] = popups;
+const popupEdit = document.querySelector(".popup_type_edit");
+const popupNewCard = document.querySelector(".popup_type_new-card");
+const popupImg = document.querySelector(".popup_type_image");
 const editProfileForm = document.querySelector("form[name='edit-profile']");
 const inputName = document.querySelector(".popup__input_type_name");
 const inputDescription = document.querySelector(
@@ -22,45 +23,36 @@ const inputCardName = document.querySelector(".popup__input_type_card-name");
 const inputCardUrl = document.querySelector(".popup__input_type_url");
 
 profileAddBtn.addEventListener("click", () => openModal(popupNewCard));
+
 profileEditBtn.addEventListener("click", () => {
   openModal(popupEdit);
-  inputName.value = profileTitle.innerText;
-  inputDescription.value = profileDescription.innerText;
-});
-popups.forEach((popup) => {
-  popup.addEventListener("click", (evt) => {
-    if (
-      evt.target.classList.contains("popup") ||
-      evt.target.classList.contains("popup__close")
-    ) {
-      closeModal(popup);
-    }
-  });
+  inputName.value = profileTitle.textContent;
+  inputDescription.value = profileDescription.textContent;
 });
 
-document.addEventListener("keydown", (evt) => {
-  if (evt.key == "Escape") {
-    closeModal(document.querySelector(".popup_is-opened"));
-  }
-});
 
-editProfileForm.addEventListener("submit", handleFormSubmit);
+
+editProfileForm.addEventListener("submit", handleEditFormSubmit);
+
 newPlaceForm.addEventListener("submit", handleCardFormSubmit);
 
-function handleFormSubmit(evt) {
+function handleEditFormSubmit(evt) {
   evt.preventDefault();
+
   const nameValue = inputName.value;
   const jobValue = inputDescription.value;
 
-  profileTitle.innerText = nameValue;
-  profileDescription.innerText = jobValue;
+  profileTitle.textContent = nameValue;
+  profileDescription.textContent = jobValue;
 
   closeModal(popupEdit);
 }
 
 function showImg(card) {
   previewImg.src = card.link;
-  previewCaption.innerText = card.name;
+  previewImg.alt = `Фотография места: ${card.name}`;
+  previewCaption.textContent = card.name;
+
   openModal(popupImg);
 }
 
@@ -73,12 +65,16 @@ function handleCardFormSubmit(evt) {
     likeCard,
     showImg
   );
+
   placesList.prepend(clone);
+
   newPlaceForm.reset();
+
   closeModal(popupNewCard);
 }
 
 initialCards.forEach((card) => {
   const clone = createCard(card, deleteCard, likeCard, showImg);
+
   placesList.append(clone);
 });
